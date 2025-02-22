@@ -2,7 +2,7 @@ name: QUIC
 
 on:
   push:
-    branches: ['main']
+    branches: ['ci']
     paths: ['.github/workflows/quic.yml', 'curl/**', 'nginx/**']
 
   pull_request:
@@ -27,7 +27,6 @@ jobs:
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
-      if: env.push == 'true'
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -81,7 +80,6 @@ jobs:
       shell: bash
 
     - name: Scan cURL QUIC Docker Image
-      if: env.push == 'true'
       uses: docker/scout-action@v1.16.1
       with:
         image: curl-quic
@@ -89,7 +87,6 @@ jobs:
         sarif-file: curl-quic-scan-results.sarif
 
     - name: Scan NGINX QUIC Docker Image
-      if: env.push == 'true'
       uses: docker/scout-action@v1.16.1
       with:
         image: nginx-quic
@@ -97,21 +94,18 @@ jobs:
         sarif-file: nginx-quic-scan-results.sarif
 
     - name: Upload Scan Results for cURL QUIC
-      if: env.push == 'true'
       uses: actions/upload-artifact@v4.4.3
       with:
         name: curl-quic-scan-results
         path: curl-quic-scan-results.sarif
 
     - name: Upload Scan Results for NGINX QUIC
-      if: env.push == 'true'
       uses: actions/upload-artifact@v4.4.3
       with:
         name: nginx-quic-scan-results
         path: nginx-quic-scan-results.sarif
 
     - name: Push Docker images to Docker Hub
-      if: env.push == 'true'
       run: |
         docker push curl-quic
         docker push nginx-quic
