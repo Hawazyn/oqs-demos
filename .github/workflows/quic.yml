@@ -113,6 +113,6 @@ jobs:
     - name: Push Docker images to Docker Hub
       if: env.push == 'true'
       run: |
-        docker push $TARGET_NAME/curl-quic:latest
-        docker push $TARGET_NAME/nginx-quic:latest
+        docker push curl-quic
+        docker push nginx-quic
       shell: bash
